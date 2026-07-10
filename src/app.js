@@ -1,4 +1,5 @@
-const express = require("express");
+import express from "express";
+import prisma from "./prisma/client.js";
 
 const app = express();
 
@@ -6,4 +7,4 @@ app.get('/', (req, res)=>{
     res.send(`Homepage`);
 });
 
-module.exports = app;
+export default app;

@@ -4,21 +4,22 @@
   "description": "",
   "license": "ISC",
   "author": "akydev",
-  "type": "commonjs",
+  "type": "module",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"
   },
   "dependencies": {
-    "@prisma/client": "^7.8.0",
+    "@prisma/client": "^6.17.1",
+    "@types/node": "^26.1.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "helmet": "^8.2.0",
     "morgan": "^1.11.0",
     "nanoid": "^5.1.16",
-    "prisma": "^7.8.0",
+    "prisma": "^6.17.1",
     "qrcode": "^1.5.4",
     "zod": "^4.4.3"
   }
