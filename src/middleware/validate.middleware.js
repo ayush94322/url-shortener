@@ -7,7 +7,7 @@ export const validate = (schema) => {
                 errors: result.error.issues
             });
         }
-        req.validateData = result.data;
+        req.validatedData = result.data;
         next();
     }
 }

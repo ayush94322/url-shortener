@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { prisma } from "../prisma/client.js";
+import prisma from "../prisma/client.js";
 
 export async function createShortUrl(data) {
   const shortCode = data.customAlias ?? nanoid(6);
