@@ -15,3 +15,12 @@ export async function create(req, res, next) {
         next(error);
     }
 }
+
+export async function redirect(req, res, next) {
+    try {
+        const originalUrl = await urlService.getOriginalUrl(req.params.shortCode);
+        res.redirect(originalUrl);
+    } catch (error) {
+        next(error);
+    }
+}
