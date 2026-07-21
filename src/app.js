@@ -26,7 +26,19 @@ app.use("/api/urls", urlRoutes);
 app.use("/", redirectRoutes);
 
 app.use((err, req, res, next) => {
-  
+  if(err.message === "URL_NOT_FOUND"){
+    return res.status(404).json({
+      success:false,
+      message:"Short URL not found"
+    });
+  }
+
+  if(err.message === "URL_EXPIRED"){
+    return res.status(410).json({
+      success:false,
+      message:"URL has expired"
+    });
+  }
 
   console.error(err);
 
