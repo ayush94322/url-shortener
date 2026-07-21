@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import urlRoutes from "./routes/url.routes.js";
+import redirectRoutes from "./routes/redirect.routes.js";
 
 const app = express();
 
@@ -13,8 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use("/api/urls", urlRoutes);
-
 // Health check route
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -23,7 +22,12 @@ app.get("/health", (req, res) => {
   });
 });
 
+app.use("/api/urls", urlRoutes);
+app.use("/", redirectRoutes);
+
 app.use((err, req, res, next) => {
+  
+
   console.error(err);
 
   res.status(500).json({
