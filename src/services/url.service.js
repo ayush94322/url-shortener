@@ -61,3 +61,24 @@ export async function getAnalytics(shortCode) {
 
   return url;
 }
+
+export async function getAllUrls(page, limit) {
+  const skip = (page-1)*limit;
+
+  const [urls, totalItems] = await prisma.$transaction([
+    prisma.url.findMany({
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc"
+      }
+    }),
+    prisma.url.count()
+  ]);
+
+  return {
+    urls,
+    totalItems,
+    totalPages: Math.ceil(totalItems / limit)
+  };
+}
