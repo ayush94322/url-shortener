@@ -25,6 +25,7 @@ app.get("/health", (req, res) => {
 app.use("/api/urls", urlRoutes);
 app.use("/", redirectRoutes);
 
+//Error handler
 app.use((err, req, res, next) => {
   if(err.message === "URL_NOT_FOUND"){
     return res.status(404).json({

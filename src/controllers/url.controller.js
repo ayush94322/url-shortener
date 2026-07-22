@@ -24,3 +24,26 @@ export async function redirect(req, res, next) {
         next(error);
     }
 }
+
+export async function analytics(req, res, next) {
+    try {
+        const url = await urlService.getAnalytics(
+            req.params.shortCode
+        );
+
+        res.json({
+            success: true,
+            data: {
+                originalUrl: url.originalUrl,
+                shortCode: url.customAlias ?? url.shortCode,
+                clicks: url.clicks,
+                createdAt: url.createdAt,
+                updatedAt: url.updatedAt,
+                lastVisitedAt: url.lastVisitedAt,
+                expiresAt: url.expiresAt
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+}

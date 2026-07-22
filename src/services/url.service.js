@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import prisma from "../prisma/client.js";
 
+
 export async function createShortUrl(data) {
   const shortCode = data.customAlias ?? nanoid(6);
 
@@ -9,41 +10,52 @@ export async function createShortUrl(data) {
       originalUrl: data.url,
       shortCode,
       customAlias: data.customAlias,
-      expiresAt: data.expiresAt ? new Date(date.expiresAt) : null,
+      expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
     },
   });
   return url;
 }
 
-export async function getOriginalUrl(shortCode) {
-  const url = await prisma.url.findFirst({
+function findUrl(shortCode) {
+  return prisma.url.findFirst({
     where: {
-      OR: [
-        {shortCode},
-        {customAlias: shortCode}
-      ]
-    }
+      OR: [{ shortCode }, { customAlias: shortCode }],
+    },
   });
+}
 
-  if(!url) {
+export async function getOriginalUrl(shortCode) {
+  const url = await findUrl(shortCode);
+
+  if (!url) {
     throw new Error("URL_NOT_FOUND");
   }
 
-  if(url.expiresAt && url.expiresAt < new Date()) {
+  if (url.expiresAt && url.expiresAt < new Date()) {
     throw new Error("URL_EXPIRED");
   }
 
   await prisma.url.update({
     where: {
-      id: url.id
+      id: url.id,
     },
     data: {
       clicks: {
-        increment: 1
+        increment: 1,
       },
-      lastVisitedAt: new Date()
-    }
+      lastVisitedAt: new Date(),
+    },
   });
 
   return url.originalUrl;
+}
+
+export async function getAnalytics(shortCode) {
+  const url = await findUrl(shortCode);
+
+  if (!url) {
+    throw new Error("URL_NOT_FOUND");
+  }
+
+  return url;
 }
