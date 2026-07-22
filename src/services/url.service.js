@@ -1,5 +1,7 @@
 import { nanoid } from "nanoid";
 import prisma from "../prisma/client.js";
+import NotFoundError from "../errors/NotFoundError.js";
+import ExpiredUrlError from "../errors/ExpiredUrlError.js";
 
 
 export async function createShortUrl(data) {
@@ -28,11 +30,11 @@ export async function getOriginalUrl(shortCode) {
   const url = await findUrl(shortCode);
 
   if (!url) {
-    throw new Error("URL_NOT_FOUND");
+    throw new NotFoundError("Short URL not found");
   }
 
   if (url.expiresAt && url.expiresAt < new Date()) {
-    throw new Error("URL_EXPIRED");
+    throw new ExpiredUrlError("URL_EXPIRED");
   }
 
   await prisma.url.update({
@@ -54,7 +56,7 @@ export async function getAnalytics(shortCode) {
   const url = await findUrl(shortCode);
 
   if (!url) {
-    throw new Error("URL_NOT_FOUND");
+    throw new NotFoundError("Short URL not found");
   }
 
   return url;
