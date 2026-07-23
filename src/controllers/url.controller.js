@@ -81,3 +81,29 @@ export async function list(req, res, next) {
     next(error);
   }
 }
+
+export async function update(req, res, next) {
+  try{
+    const url = await urlService.updateUrl(req.params.shortCode, req.validatedData);
+    res.json({
+      success: true,
+      data: {
+        id: url.id,
+        shortCode: url.customAlias ?? url.shortCode,
+        originalUrl: url.originalUrl,
+        expiresAt: url.expiresAt
+      }
+    });
+  } catch(error) {
+    next(error);
+  }
+}
+
+export async function remove(req, res, next) {
+  try {
+    await urlService.deleteUrl(req.params.shortCode);
+    res.sendStatus(204);
+  } catch(error) {
+    next(error);
+  }
+}

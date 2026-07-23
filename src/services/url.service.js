@@ -82,3 +82,39 @@ export async function getAllUrls(page, limit) {
     totalPages: Math.ceil(totalItems / limit)
   };
 }
+
+export async function updateUrl(shortCode, data) {
+  const url = await findUrl(shortCode);
+  if(!url) {
+    throw new NotFoundError("Short URL not found");
+  }
+  const updated = await prisma.url.update({
+    where: {
+      id: url.id
+    },
+    data: {
+      ...(data.url && {
+        originalUrl: data.url
+      }),
+      ...(data.customAlias && {
+        customAlias: data.customAlias
+      }),
+      ...(data.expiresAt && {
+        expiresAt: new Date(data.expiresAt)
+      })
+    }
+  });
+  return updated;
+}
+
+export async function deleteUrl(shortCode) {
+  const url = await findUrl(shortCode);
+  if(!url) {
+    throw new NotFoundError("Short URL not found");
+  }
+  await prisma.url.delete({
+    where: {
+      id: url.id
+    }
+  });
+}
