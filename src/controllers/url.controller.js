@@ -107,3 +107,14 @@ export async function remove(req, res, next) {
     next(error);
   }
 }
+
+export async function qrCode(req, res, next) {
+  try {
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const buffer = await urlService.genrateQrCode(req.params.shortCode, baseUrl);
+    res.setHeader("Content-Type", "image/png");
+    res.send(buffer);
+  } catch (error) {
+    next(error);
+  }
+}

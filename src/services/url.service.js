@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import QRCode from "qrcode";
 import prisma from "../prisma/client.js";
 import NotFoundError from "../errors/NotFoundError.js";
 import ExpiredUrlError from "../errors/ExpiredUrlError.js";
@@ -117,4 +118,13 @@ export async function deleteUrl(shortCode) {
       id: url.id
     }
   });
+}
+
+export async function genrateQrCode(shortCode, baseUrl) {
+  const url = await findUrl(shortCode);
+  if(!url) {
+    throw new NotFoundError("Short URL not found");
+  }
+  const shortUrl = `${baseUrl}/${url.customAlias ?? url.shortCode}`;
+  return QRCode.toBuffer(shortUrl);
 }
